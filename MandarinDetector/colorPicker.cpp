@@ -56,9 +56,9 @@ int main(int argc, char** argv) {
     namedWindow(winName, WINDOW_AUTOSIZE);
 
     HSVValues hsvValues{};
-    hsvValues.lowH = 29;
-    hsvValues.highH = 31;
-    hsvValues.lowS = 0;
+    hsvValues.lowH = 95;
+    hsvValues.highH = 115;
+    hsvValues.lowS = 52;
     hsvValues.highS = 255;
     hsvValues.lowV = 0;
     hsvValues.highV = 255;
@@ -146,17 +146,15 @@ Mat processFrame(Mat im, HSVValues hsvValues) {
 
     // TODO: clean up edges inside of the white areas
     // open to get rid of white, masked out points
-    // Mat kernel = Mat(10, 10, CV_8UC1, 1);//getStructuringElement(MORPH_RECT, (5, 5));
+    Mat kernel = Mat(11, 11, CV_8UC1, 1);//getStructuringElement(MORPH_RECT, (5, 5));
     // cout << "made kernel\n";
     // morphologyEx(mask, mask, MORPH_CLOSE, kernel);
     // cout << "done morphology\n";	
 
     Mat result{ mask };
     bitwise_and(im, im, result, mask = mask);
-    circle(result, Point2f(317,215), 3, Scalar(0,255,0), 1);
 
-    return mask;
-    // return result;
+    return result;
 }
 
 static void onMouse(int event, int x, int y, int flags, void* param) {
