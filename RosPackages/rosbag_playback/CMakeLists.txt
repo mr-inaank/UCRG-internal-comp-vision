@@ -209,6 +209,7 @@ include_directories(
 # catkin_add_nosetests(test)
 
 add_executable(listener src/rosbag_listener.cpp)
-target_link_libraries(listener ${catkin_LIBRARIES})
+add_executable(kinectListener src/kinect_listener.cpp)
+target_link_libraries(listener ${catkin_LIBRARIES} ${OpenCV_LIBRARIES})
 # add_dependencies(listener beginner_tutorials_generate_messages_cpp)
-target_link_libraries(listener  ${OpenCV_LIBRARIES})
+target_link_libraries(kinectListener ${catkin_LIBRARIES} ${OpenCV_LIBRARIES})

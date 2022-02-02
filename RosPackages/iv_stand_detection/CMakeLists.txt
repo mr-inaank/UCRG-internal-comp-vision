@@ -105,9 +105,9 @@ find_package(OpenCV REQUIRED)
 ## CATKIN_DEPENDS: catkin_packages dependent projects also need
 ## DEPENDS: system dependencies of this project that dependent projects also need
 catkin_package(
-  #  INCLUDE_DIRS include
+  INCLUDE_DIRS include
 #  LIBRARIES iv_stand_detection
-#  CATKIN_DEPENDS roscpp std_msgs
+ CATKIN_DEPENDS roscpp std_msgs
 #  DEPENDS system_lib
 )
 
@@ -118,7 +118,7 @@ catkin_package(
 ## Specify additional locations of header files
 ## Your package locations should be listed before other locations
 include_directories(
-# include
+ include
   ${catkin_INCLUDE_DIRS}
   ${OpenCV_INCLUDE_DIRS}
 )
@@ -208,7 +208,6 @@ include_directories(
 ## Add folders to be run by python nosetests
 # catkin_add_nosetests(test)
 
-add_executable(offsetCalculator src/main.cpp)
-target_link_libraries(offsetCalculator ${catkin_LIBRARIES})
-# add_dependencies(offsetCalculator beginner_tutorials_generate_messages_cpp)
-target_link_libraries(offsetCalculator  ${OpenCV_LIBRARIES})
+add_executable(iv_stand_detection src/main.cpp src/OffsetCalculator.cpp src/VisionBrain.cpp)
+add_dependencies(iv_stand_detection ${iv_stand_detection_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
+target_link_libraries(iv_stand_detection ${catkin_LIBRARIES} ${OpenCV_LIBRARIES})
