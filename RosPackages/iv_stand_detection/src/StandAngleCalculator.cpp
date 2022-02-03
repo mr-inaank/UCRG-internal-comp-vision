@@ -5,6 +5,19 @@ using namespace cv;
 
 double findThirdSide(double a, double b, double C) { return sqrt(a * a + b * b - 2 * a * b * sin(C)); }
 
+int getRangeIndex(int x, const sensor_msgs::LaserScan& msg) {
+    auto maxTheta = msg.angle_min + 639 * msg.angle_increment;
+
+    auto powerCorrection = 0.98;
+
+    auto index = (pow(1-x/640.0, 1.0/0.98) * (maxTheta - msg.angle_min) - msg.angle_max - msg.angle_min) /
+                 msg.angle_increment;
+
+    index = max(0.0, min(639.0, floor(index)));
+ 
+    return (int)index;
+}
+
 StandAngle StandAngleCalculator::calcStandAngle(Mat im, const sensor_msgs::LaserScan& scan) {
     HSVRange yellowrawStandRange{Scalar(29, 0, 0), Scalar(31, 255, 255)};
     HSVRange bluerawStandRange{Scalar(115, 0, 0), Scalar(125, 255, 255)};
@@ -22,32 +35,36 @@ StandAngle StandAngleCalculator::calcStandAngle(Mat im, const sensor_msgs::Laser
         }
     }
 
-    auto left = ceil(0.1 * standLocation.upperPoint.x + 0.9 * standLocation.lowerPoint.x);
+    auto left = ceil(0.3 * standLocation.upperPoint.x + 0.7 * standLocation.lowerPoint.x);
     auto center = floor(0.5 * standLocation.upperPoint.x + 0.5 * standLocation.lowerPoint.x);
-    auto right = floor(0.9 * standLocation.upperPoint.x + 0.1 * standLocation.lowerPoint.x);
+    auto right = floor(0.7 * standLocation.upperPoint.x + 0.3 * standLocation.lowerPoint.x);
 
-    auto leftDistance = scan.ranges.at(left);
-    auto centerDistance = scan.ranges.at(center);
-    auto rightDistance = scan.ranges.at(right);
+    auto leftIndex = getRangeIndex(left, scan);
+    auto centerIndex = getRangeIndex(center, scan);
+    auto rightIndex = getRangeIndex(right, scan);
+
+    auto leftDistance = scan.ranges.at(leftIndex);
+    auto centerDistance =scan.ranges.at(centerIndex);
+    auto rightDistance = scan.ranges.at(rightIndex);
 
     // refer to diagram in src folder for annotations
-    auto alpha = (right - left) * scan.angle_increment;
-    auto gamma = left * scan.angle_increment - scan.angle_min;
+    auto alpha = (rightIndex - leftIndex) * scan.angle_increment;
+    auto gamma = leftIndex * scan.angle_increment + scan.angle_min;
 
     auto x = sqrt(leftDistance * leftDistance + rightDistance * rightDistance -
                   2 * leftDistance * rightDistance * cos(alpha));
     auto beta = acos((leftDistance * leftDistance + rightDistance * rightDistance - x * x) /
                      (2 * leftDistance * rightDistance));
-    
+
     auto theta = beta - gamma;
 
-    ROS_INFO("dl: %f metres, dr: %f metres, x: %f metres", leftDistance, rightDistance, x);
-    ROS_INFO("beta: %f radians, gamma: %f radians, theta: %f radians", beta, gamma, theta);
+    // ROS_INFO("dl: %f metres, dr: %f metres, x: %f metres", leftDistance, rightDistance, x);
+    // ROS_INFO("beta: %f radians, gamma: %f radians, theta: %f radians", beta, gamma, theta);
     StandAngle result{standNumber, centerDistance, theta};
 
-    circle(im, Point(left, 240), 5, Scalar(255, 255, 0), -1);
-    circle(im, Point(center, 240), 5, Scalar(255, 0, 255), -1);
-    circle(im, Point(right, 240), 5, Scalar(0, 255, 255), -1);
+    // circle(im, Point(left, 240), 5, Scalar(255, 255, 0), -1);
+    // circle(im, Point(center, 240), 5, Scalar(255, 0, 255), -1);
+    // circle(im, Point(right, 240), 5, Scalar(0, 255, 255), -1);
     // ROS_INFO("Stand: %f metres @ %f radians", result.standDistance, result.angle);
     return result;
 }

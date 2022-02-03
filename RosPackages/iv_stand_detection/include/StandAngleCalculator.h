@@ -4,7 +4,7 @@
 #include <opencv2/opencv.hpp>
 #include <sensor_msgs/LaserScan.h>
 
-enum StandType { NO_STAND = 0, YELLOW_STAND = 1, BLUE_STAND = 2 };
+enum StandType { NO_STAND = 0, BLUE_STAND = 1, YELLOW_STAND = 2 };
 
 struct StandAngle {
     StandAngle(StandType _standType = StandType::NO_STAND, double _standDistance = nan(""), double _angle = nan(""))
