@@ -208,6 +208,6 @@ include_directories(
 ## Add folders to be run by python nosetests
 # catkin_add_nosetests(test)
 
-add_executable(iv_stand_detection src/main.cpp src/OffsetCalculator.cpp src/VisionBrain.cpp)
+add_executable(iv_stand_detection src/main.cpp src/OffsetCalculator.cpp src/VisionBrain.cpp src/StandAngleCalculator.cpp)
 add_dependencies(iv_stand_detection ${iv_stand_detection_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
 target_link_libraries(iv_stand_detection ${catkin_LIBRARIES} ${OpenCV_LIBRARIES})

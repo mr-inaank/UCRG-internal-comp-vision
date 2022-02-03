@@ -20,7 +20,7 @@ class VisionBrain {
     void scanRecievedCallback(const sensor_msgs::LaserScan::ConstPtr& scan);
 
     cv::Mat curFrame;
-    std::vector<float> curRanges;
+    sensor_msgs::LaserScan curScan;
 
     cv::String windowName;
 };

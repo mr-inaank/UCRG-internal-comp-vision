@@ -48,7 +48,7 @@ private:
 
 void processFrame(Mat im);
 Mat extractSegments(Mat im, HSVRange range);
-PointInterval findrawStand(Mat im, HSVRange range);
+PointInterval findRawStand(Mat im, HSVRange range);
 
 int main(int argc, char** argv) {
 
@@ -121,10 +121,10 @@ void processFrame(Mat im) {
     HSVRange bluerawStandRange{ Scalar(115,0,0), Scalar(125,255,255) };
 
 
-    auto result = findrawStand(im, yellowrawStandRange);
+    auto result = findRawStand(im, yellowrawStandRange);
     auto standNumber = YELLOW_STAND;
     if (result.isNull()) {
-        result = findrawStand(im, bluerawStandRange);
+        result = findRawStand(im, bluerawStandRange);
         standNumber = BLUE_STAND;
 
         if (result.isNull()) {
@@ -160,7 +160,7 @@ struct str {
 } comp;
 
 
-PointInterval findrawStand(Mat im, HSVRange range) {
+PointInterval findRawStand(Mat im, HSVRange range) {
     Mat mask = extractSegments(im, range);
 
     // Find Contours
