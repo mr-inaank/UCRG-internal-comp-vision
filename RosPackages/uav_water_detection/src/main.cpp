@@ -8,7 +8,10 @@ int main(int argc, char** argv) {
     ROS_INFO("READY1231234");
 
     while (ros::ok()) {
-        brain.executeTasks();
+        if (!brain.executeTasks()) {
+            ros::spinOnce();
+            break;
+        }
         ros::spinOnce();
     }
 }

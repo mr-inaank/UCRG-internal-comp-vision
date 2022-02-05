@@ -207,6 +207,6 @@ include_directories(
 
 ## Add folders to be run by python nosetests
 # catkin_add_nosetests(test)
-add_executable(uav_water_detection src/main.cpp src/VisionBrain.cpp src/PoolDetector.cpp)
+add_executable(uav_water_detection src/main.cpp src/VisionBrain.cpp src/PoolDetector.cpp src/CheckerboardDetector.cpp)
 add_dependencies(uav_water_detection ${uav_water_detection_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
 target_link_libraries(uav_water_detection ${catkin_LIBRARIES} ${OpenCV_LIBRARIES})

@@ -1,5 +1,6 @@
 #include <PoolDetector.h>
 #include <VisionBrain.h>
+#include <CheckerboardDetector.h>
 #include <cv_bridge/cv_bridge.h>
 
 VisionBrain::VisionBrain() {
@@ -28,23 +29,56 @@ void VisionBrain::imageRecievedCallback(const sensor_msgs::ImageConstPtr& msg) {
     }
 }
 
-void VisionBrain::pumpIsActiveCallback(const std_msgs::Bool::ConstPtr& isActive) { isPumpActive = isActive->data; }
+void VisionBrain::pumpIsActiveCallback(const std_msgs::Bool::ConstPtr& pumpFinished) { isPumpActive = pumpFinished->data; }
 
-void VisionBrain::executeTasks() {
+bool VisionBrain::executeTasks() {
     if (curFrame.empty()) {
         ROS_ERROR("No image recieved");
-        return;
+        return true;
     }
+    auto prevTaskNumber = taskNumber;
 
     switch (taskNumber) {
         case 0:
-            counter = 0;
             takeoff();
+            break;
         case 1:
             findPool();
+            break;
+        case 2:
+            descendAboveZone(); 
+            break; 
+        case 3:
+            waitForWaterCollection();   
+            break; 
+        case 4:          
+            takeoff();
+            break;
+        case 5:
+            findCheckerBoard();
+            break;
+        case 6:
+            descendAboveZone();
+            break;
+        case 7:
+            waitForWaterCollection();
+            break;
+        case 8:
+            takeoff();
+            break;
+        case 9:
+            returnToHome();
+            break;
+        case 10:
+            ROS_INFO("STOPPPED!!!");
+            return false;
     }
 
-    activatePump(false);
+    if (taskNumber != prevTaskNumber) {
+        counter = 0;
+    }
+
+    return true;
 }
 
 void VisionBrain::activatePump(bool activate) {
@@ -65,9 +99,94 @@ void VisionBrain::takeoff() {
     ROS_INFO("Command: STOP");
 }
 
+void VisionBrain::printInstruction(cv::Point locationOffset) {
+    std::string horizontal;
+    std::string vertical;
+
+    if (locationOffset == cv::Point(0,0)) {
+        ROS_INFO("Command: STOP!");
+    }
+
+    if (locationOffset.x < 0) {
+        horizontal = "LEFT ";
+    } else if (locationOffset.x > 0) {
+        horizontal = "RIGHT ";
+    }
+
+    if (locationOffset.y < 0) {
+        vertical = "FORWARD ";
+    } else if (locationOffset.y > 0 ) {
+        vertical = "BACKWARD ";
+    }
+
+    ROS_INFO("Command: %s %d, %s, %d", horizontal.c_str() , abs(locationOffset.x), vertical.c_str(), abs(locationOffset.y));
+}
+
 void VisionBrain::findPool() {
     ROS_INFO("Command: LEFT");
 
-    auto result = PoolDetector::getPoolLocation(curFrame);
+    auto result = PoolDetector::getPoolOffset(curFrame);
+
+    if (result.x <= 30 && result.y <= 30) {
+        printInstruction(cv::Point(0,0));
+        taskNumber++;
+    } else {
+        printInstruction(result);
+    }
+
+    return;
+}
+
+void VisionBrain::descendAboveZone() {
+    if (counter < 7) {
+        ROS_INFO("Command: DOWN");
+        counter++;
+        return;
+    }
+
+    ROS_INFO("Command: STOP");
+    activatePump(true);
+    isPumpActive = true;
+    taskNumber++;
+}
+
+void VisionBrain::waitForWaterCollection() {
+    if (isPumpActive) {
+        return;
+    }
+
+    taskNumber++;
+}
+
+void VisionBrain::findCheckerBoard() {
+    ROS_INFO("Command: LEFT");
+
+    auto result = CheckerboardDetector::getCheckerboardLocation(curFrame);
+    result = cv::Point((int) curFrame.cols/2, (int) curFrame.rows/2) - result;
+
+    if (result.x <= 30 && result.y <= 30) {
+        printInstruction(cv::Point(0,0));
+        taskNumber++;
+    } else {
+        printInstruction(result);
+    }
+
+    return;
+}
+
+void VisionBrain::returnToHome() {
+     if (counter < 10) {
+        ROS_INFO("Command: LEFT");
+        counter++;
+        return;
+    }
+
+    if (counter < 20) {
+        ROS_INFO("Command: DOWN");
+        counter++;
+        return;
+    }
+    ROS_INFO("Command: STOP");
+    taskNumber++;
     return;
 }

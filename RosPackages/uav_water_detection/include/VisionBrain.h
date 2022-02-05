@@ -11,14 +11,14 @@ class VisionBrain {
    public:
     VisionBrain();
     ~VisionBrain();
-    void executeTasks();
+    bool executeTasks();
 
    private:
     image_transport::Subscriber imageSub;
     void imageRecievedCallback(const sensor_msgs::ImageConstPtr& msg);
 
     ros::Subscriber pumpSub;
-    void pumpIsActiveCallback(const std_msgs::Bool::ConstPtr& isActive);
+    void pumpIsActiveCallback(const std_msgs::Bool::ConstPtr& pumpFinished);
     bool isPumpActive;
 
     ros::Publisher pumpPub;
@@ -28,11 +28,17 @@ class VisionBrain {
 
     cv::String windowName;
 
+    void printInstruction(cv::Point locationOffset);
+
     int taskNumber = 1;
     int counter;
 
     void takeoff();
     void findPool();
+    void descendAboveZone();
+    void waitForWaterCollection();
+    void findCheckerBoard();
+    void returnToHome();
 };
 
 #endif
