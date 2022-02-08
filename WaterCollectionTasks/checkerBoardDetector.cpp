@@ -13,7 +13,7 @@ const auto NULL_POINT = Point(-1, -1);
 auto prevCenter = NULL_POINT;
 
 Point processFrame(Mat im);
-void printInstruction(Mat im, Point poolCenter);
+void printInstruction(Mat im, Point poolCenter){};
 
 RNG rng(12345);
 

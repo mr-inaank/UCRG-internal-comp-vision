@@ -31,18 +31,20 @@ set(CMAKE_CXX_STANDARD 17)
 find_package( OpenCV REQUIRED )
 
 # tell the build to include the headers from OpenCV
-include_directories( ${OpenCV_INCLUDE_DIRS} )
+include_directories( ${OpenCV_INCLUDE_DIRS}, classes )
 
 # specify the executable target to be built
 add_executable(poolDetector poolDetector.cpp)
 add_executable(checkerBoardDetector checkerBoardDetector.cpp)
-# add_executable(checkerBoardDetector2 checkerBoardDetector2.cpp)
+add_executable(checkerBoardDetector2 checkerBoardDetector2.cpp)
+add_executable(checkerBoardDetectorClass classes/CheckerBoardDetector.cpp)
 add_executable(colorPicker colorPicker.cpp)
 # add_executable(poolDetector test2.cpp)
 
 # tell it to link the executable target against OpenCV
 target_link_libraries(poolDetector ${OpenCV_LIBS} )
 target_link_libraries(checkerBoardDetector ${OpenCV_LIBS} )
-# target_link_libraries(checkerBoardDetector2 ${OpenCV_LIBS} )
+target_link_libraries(checkerBoardDetector2 ${OpenCV_LIBS} )
+target_link_libraries(checkerBoardDetectorClass ${OpenCV_LIBS} )
 target_link_libraries(colorPicker ${OpenCV_LIBS} )
 # target_link_libraries(poolDetector ${OpenCV_LIBS} )

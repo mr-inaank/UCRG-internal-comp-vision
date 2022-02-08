@@ -59,9 +59,9 @@ int main(int argc, char** argv) {
     hsvValues.lowH = 0;
     hsvValues.highH = 255;
     hsvValues.lowS = 0;
-    hsvValues.highS = 11;
-    hsvValues.lowV = 0;
-    hsvValues.highV = 255;
+    hsvValues.highS = 33;
+    hsvValues.lowV = 123;
+    hsvValues.highV = 188;
 
     createTrackbar("LowH", winName, &hsvValues.lowH, 255);
     createTrackbar("HighH", winName, &hsvValues.highH, 255);
@@ -146,17 +146,17 @@ Mat processFrame(Mat im, HSVValues hsvValues) {
 
     // TODO: clean up edges inside of the white areas
     // open to get rid of white, masked out points
-    Mat kernel = getStructuringElement(MORPH_RECT, Size(7, 7));
+    Mat kernel = getStructuringElement(MORPH_RECT, Size(3, 3));
     morphologyEx(mask, mask, MORPH_OPEN, kernel);
-    morphologyEx(mask, mask, MORPH_OPEN, kernel);
-    morphologyEx(mask, mask, MORPH_CLOSE, kernel);
+    // morphologyEx(mask, mask, MORPH_OPEN, kernel);
+    // morphologyEx(mask, mask, MORPH_CLOSE, kernel);
 
 
 
     Mat result{ mask };
     bitwise_and(im, im, result, mask = mask);
 
-    // return mask;
+    return mask;
     return result;
 }
 
