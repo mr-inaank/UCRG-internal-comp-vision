@@ -47,7 +47,7 @@ std::vector<Point> DateDetector::findDates(Mat im) {
             maxArea = area;
         }
     }
-
+    ROS_ERROR("Number of dates:%d" index);
     if (index < 0) {
         return std::vector<Point>();
     }

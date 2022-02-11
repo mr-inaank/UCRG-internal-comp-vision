@@ -23,8 +23,8 @@ void VisionBrain::imageRecievedCallback(const sensor_msgs::ImageConstPtr& msg) {
     try {
         curFrame = cv_bridge::toCvShare(msg, "bgr8")->image;
 
-        cv::imshow(windowName, curFrame);
-        cv::waitKey(25);
+        // cv::imshow(windowName, curFrame);
+        // cv::waitKey(25);
     }
     catch (cv_bridge::Exception& e) {
         ROS_ERROR("Could not convert from '%s' to 'bgr8'.", msg->encoding.c_str());
@@ -126,8 +126,8 @@ void VisionBrain::printInstruction(cv::Point locationOffset) {
     }
 
     ROS_INFO("Command: %s %d, %s, %d", horizontal.c_str(), abs(locationOffset.x), vertical.c_str(), abs(locationOffset.y));
-    cv::imshow(windowName, curFrame);
-    cv::waitKey(25);
+    // cv::imshow(windowName, curFrame);
+    // cv::waitKey(25);
 }
 
 void VisionBrain::collectDates() {
