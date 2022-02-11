@@ -132,7 +132,7 @@ void VisionBrain::printInstruction(cv::Point locationOffset) {
 
 void VisionBrain::collectDates() {
 
-    if (counter >= 20) {
+    if (counter >= 200) {
         taskNumber++;
     }
     counter++;
