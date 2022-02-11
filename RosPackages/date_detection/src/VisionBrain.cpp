@@ -13,6 +13,7 @@ VisionBrain::VisionBrain() {
 
     dateGrabberPub = nh.advertise<std_msgs::Bool>("/simon/dateCollector/activate", 1);
     dateGrabberSub = nh.subscribe("/simon/dateCollector/isActive", 1, &VisionBrain::dateGrabberIsActiveCallback, this);
+laserScanSub = nh.subscribe("/scan", 1, &VisionBrain::scanRecievedCallback, this);
 }
 
 VisionBrain::~VisionBrain() {
@@ -165,9 +166,13 @@ void VisionBrain::collectDates() {
 void VisionBrain::waitForCollectingDate() {
     activateDateGrabber();
 
-    while (isDateGrabberActive) {
-        break;
-    }
+    //while (isDateGrabberActive) {
+   //     break;
+   // }
+
+ 	ros::Duration duration(70.);
+        duration.sleep();
+
 
     taskNumber++;
 }
