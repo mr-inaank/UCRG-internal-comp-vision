@@ -85,8 +85,8 @@ int main(int argc, char** argv) {
         printf("Processing a video file\n");
 
         // make a video capture object
-        cap = VideoCapture(argv[1]);
-        // cap = VideoCapture(0);
+        // cap = VideoCapture(argv[1]);
+        cap = VideoCapture(0);
 
         if (!cap.isOpened()) {
             fprintf(stderr, "Couldn't open the video, EXITING\n");

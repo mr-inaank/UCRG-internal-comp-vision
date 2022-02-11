@@ -6,7 +6,7 @@
 
 class DateDetector {
 public:
-    static cv::Point processFrame(cv::Mat im);
+    static std::vector<cv::Point> findDates(cv::Mat im);
 
 private:
     static cv::Mat getDateMask(cv::Mat im);

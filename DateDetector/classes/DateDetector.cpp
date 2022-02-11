@@ -7,8 +7,6 @@ using namespace cv;
 
 #define MAX_HEIGHT 800
 
-const Point NULL_POINT{-1, -1};
-
 Mat DateDetector::getDateMask(Mat im) {
     Mat gray;
     cvtColor(im, gray, COLOR_BGR2GRAY);
@@ -29,7 +27,7 @@ Mat DateDetector::getDateMask(Mat im) {
     return mask;
 }
 
-Point DateDetector::processFrame(Mat im) {
+std::vector<Point> DateDetector::findDates(Mat im) {
 
     while (im.rows > MAX_HEIGHT) {
         resize(im, im, Size(), 0.5, 0.5, INTER_LINEAR);
@@ -51,12 +49,12 @@ Point DateDetector::processFrame(Mat im) {
     }
 
     if (index < 0) {
-        return NULL_POINT;
+        return std::vector<Point>();
     }
 
     if (maxArea < 300) {
         drawContours(im, contours, index, Scalar(255, 0, 0), 1);
-        return NULL_POINT;
+        return std::vector<Point>();
     } else {
         drawContours(im, contours, index, Scalar(0, 255, 0), 1);
     }
@@ -64,8 +62,8 @@ Point DateDetector::processFrame(Mat im) {
     Rect rect = boundingRect(contours[index]);
     rectangle(im, rect, Scalar(255, 0, 0), 2);
     Point center = (rect.br() + rect.tl()) * 0.5;
-
-    return center;
+    
+    return std::vector<Point>{center};
 }
 
 int main() {
