@@ -16,6 +16,7 @@ find_package(catkin REQUIRED COMPONENTS
 
 ## System dependencies are found with CMake's conventions
 # find_package(Boost REQUIRED COMPONENTS system)
+find_package(OpenCV REQUIRED)
 
 
 ## Uncomment this if the package has a setup.py. This macro ensures
@@ -104,9 +105,9 @@ find_package(catkin REQUIRED COMPONENTS
 ## CATKIN_DEPENDS: catkin_packages dependent projects also need
 ## DEPENDS: system dependencies of this project that dependent projects also need
 catkin_package(
-#  INCLUDE_DIRS include
+ INCLUDE_DIRS include
 #  LIBRARIES uav_water_sim
-#  CATKIN_DEPENDS cv_bridge image_transport roscpp std_msgs
+ CATKIN_DEPENDS cv_bridge image_transport roscpp std_msgs
 #  DEPENDS system_lib
 )
 
@@ -117,8 +118,9 @@ catkin_package(
 ## Specify additional locations of header files
 ## Your package locations should be listed before other locations
 include_directories(
-# include
+  include
   ${catkin_INCLUDE_DIRS}
+  ${OpenCV_INCLUDE_DIRS}
 )
 
 ## Declare a C++ library
@@ -205,3 +207,6 @@ include_directories(
 
 ## Add folders to be run by python nosetests
 # catkin_add_nosetests(test)
+add_executable(uav_water_sim src/main.cpp src/VisionBrain.cpp src/PoolDetector.cpp src/CheckerboardDetector.cpp)
+add_dependencies(uav_water_sim ${uav_water_sim_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
+target_link_libraries(uav_water_sim ${catkin_LIBRARIES} ${OpenCV_LIBRARIES})
