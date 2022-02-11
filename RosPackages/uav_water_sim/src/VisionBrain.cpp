@@ -132,7 +132,7 @@ void VisionBrain::printInstruction(cv::Point locationOffset) {
 void VisionBrain::findPool() {
 
     auto resultList = PoolDetector::getPoolOffset(curFrame);
-    if (result.size() == 0) {
+    if (resultList.size() == 0) {
         printf("\nCommand: LEFT");
         return;
     }
