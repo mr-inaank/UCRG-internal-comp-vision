@@ -5,8 +5,6 @@
 using namespace cv;
 
 #define MAX_HEIGHT 800
-cv::Point prevCenter = NULL_POINT;
-
 
 Mat CheckerboardDetector::preprocessImage(Mat im) {
     // Convert the images to HSV channels to filter by colour
@@ -14,59 +12,69 @@ Mat CheckerboardDetector::preprocessImage(Mat im) {
     cvtColor(im, im_HSV, COLOR_BGR2HSV);
     cvtColor(im, gray, COLOR_BGR2GRAY);
 
-    // add a colour masks to only include certain hue range
-    Scalar lower_mask, upper_mask;
-    Scalar lower_mask2, upper_mask2;
-    lower_mask = Scalar(0, 0, 0);
-    upper_mask = Scalar(255, 11, 255);
-    lower_mask2 = Scalar(0, 4, 144);
-    upper_mask2 = Scalar(255, 45, 255);
+    Mat mask;
+    cornerHarris(gray, mask, 3, 5, 0.1);
+    mask.convertTo(mask, CV_8UC1, 255, 0);
+    threshold(mask, mask, 0, 255, THRESH_BINARY);
 
-    Mat mask1, mask2;
-    inRange(im_HSV, lower_mask, upper_mask, mask1); // using hsv ranges
-    inRange(im_HSV, lower_mask2, upper_mask2, mask2); // using hsv ranges
+    Mat kernel = getStructuringElement(MORPH_RECT, Size(35, 35));
+    morphologyEx(mask, mask, MORPH_CLOSE, kernel);
 
-    Mat mask = mask1.clone();
-
-    Mat kernel = getStructuringElement(MORPH_RECT, Size(11, 11));
+    kernel = getStructuringElement(MORPH_RECT, Size(27, 27));
     morphologyEx(mask, mask, MORPH_OPEN, kernel);
 
     return mask;
+
+    // add a colour masks to only include certain hue range
+    // Scalar lower_mask, upper_mask;
+    // lower_mask = Scalar(0, 0, 200);
+    // upper_mask = Scalar(255, 15, 215);
+
+    // Mat mask;
+    // inRange(im_HSV, lower_mask, upper_mask, mask);
+
+    // kernel = getStructuringElement(MORPH_RECT, Size(15, 15));
+    // morphologyEx(mask, mask, MORPH_CLOSE, kernel);
+
+    // kernel = getStructuringElement(MORPH_RECT, Size(27, 27));
+    // morphologyEx(mask, mask, MORPH_OPEN, kernel);
+
+    // return mask;
 }
 
-Point CheckerboardDetector::getCheckerboardLocation(Mat im) {
+std::vector<Point> CheckerboardDetector::getCheckerboardLocation(Mat im) {
     Mat mask = preprocessImage(im);
 
-    Mat result1;
-    cornerHarris(mask, result1, 3, 5, 0.1);
-    result1.convertTo(result1, CV_8UC1, 255, 0);
-
-    Mat kernel = getStructuringElement(MORPH_RECT, Size(5, 5));
-    morphologyEx(result1, result1, MORPH_CLOSE, kernel);
-    kernel = getStructuringElement(MORPH_RECT, Size(3, 3));
-    morphologyEx(result1, result1, MORPH_ERODE, kernel);
-
     std::vector<Point> points;
-    findNonZero(result1, points);
+    findNonZero(mask, points);
 
-    Rect rect = boundingRect(points);
-    rectangle(im, rect, Scalar(0, 0, 255), 1);
-    if (rect.area() > 10000) {
-        rectangle(im, rect, Scalar(0, 0, 255), 3);
+    std::vector<std::vector<Point>> contours;
+    findContours(mask, contours, RETR_EXTERNAL, CHAIN_APPROX_SIMPLE);
 
-        Point center = (rect.br() + rect.tl()) * 0.5;
-        circle(im, center, 5, Scalar(0, 255, 0), 1);
-        auto lr = 0.3;
-        if (prevCenter != NULL_POINT) {
-            center = center * lr + prevCenter * (1 - lr);
+    std::vector<Point> checkerBoard;
+
+    // If there are too many contours, we select largest one.
+    auto maxArea = 0;
+    auto index = 0;
+    for (auto i = 0; i < contours.size(); i++) {
+        auto area = contourArea(contours[i]);
+        if (area > maxArea) {
+            maxArea = area;
+            index = i;
         }
-        circle(im, center, 7, Scalar(0, 255, 0), 3);
-        prevCenter = center;
-
-        return center;
-    } else {
-        prevCenter = NULL_POINT;
-        return NULL_POINT;
     }
 
+    if (maxArea < 3500) {
+        return std::vector<Point>();
+    }
+
+    auto board = contours[index];
+
+    Rect rect = boundingRect(board);
+    rectangle(im, rect, Scalar(0, 0, 255), 3);
+
+    Point center = (rect.br() + rect.tl()) * 0.5;
+    circle(im, center, 7, Scalar(0, 255, 0), 3);
+
+    return std::vector<Point>{Point((int)im.cols / 2, (int)im.rows / 2) - center};
 }
