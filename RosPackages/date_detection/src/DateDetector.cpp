@@ -2,6 +2,7 @@
 #include <opencv2/highgui.hpp>
 
 #include <DateDetector.h>
+#include <ros/ros.h>
 
 using namespace cv;
 
@@ -12,13 +13,13 @@ Mat DateDetector::getDateMask(Mat im) {
     cvtColor(im, gray, COLOR_BGR2GRAY);
 
     Mat mask;
-    threshold(gray, mask, 30, 255, THRESH_BINARY_INV);
+    threshold(gray, mask, 50, 255, THRESH_BINARY_INV);
 
     Mat cleaningMask = Mat(mask.rows, mask.cols, CV_8UC1, 255);
     // cleaningMask(Rect(Point(381, 367), Point(501, im.rows))) = 0;
     cleaningMask(Rect(Point(236, im.rows), Point(371, 367))) = 0;
     bitwise_and(mask, cleaningMask, mask);
-
+   
     Mat kernel;
     kernel = getStructuringElement(MORPH_RECT, Size(11, 11));
     morphologyEx(mask, mask, MORPH_CLOSE, kernel);
@@ -47,7 +48,8 @@ std::vector<Point> DateDetector::findDates(Mat im) {
             maxArea = area;
         }
     }
-    ROS_ERROR("Number of dates:%d" index);
+	
+    ROS_ERROR("Number of dates: %d", index);
     if (index < 0) {
         return std::vector<Point>();
     }
@@ -62,7 +64,6 @@ std::vector<Point> DateDetector::findDates(Mat im) {
     Rect rect = boundingRect(contours[index]);
     rectangle(im, rect, Scalar(255, 0, 0), 2);
     Point center = (rect.br() + rect.tl()) * 0.5;
-    imshow("im", im);
-    waitKey(25);
+
     return std::vector<Point>{center};
 }

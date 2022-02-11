@@ -126,8 +126,8 @@ void VisionBrain::printInstruction(cv::Point locationOffset) {
     }
 
     ROS_INFO("Command: %s %d, %s, %d", horizontal.c_str(), abs(locationOffset.x), vertical.c_str(), abs(locationOffset.y));
-    // cv::imshow(windowName, curFrame);
-    // cv::waitKey(25);
+    cv::imshow(windowName, curFrame);
+    cv::waitKey(25);
 }
 
 void VisionBrain::collectDates() {
@@ -145,7 +145,7 @@ void VisionBrain::collectDates() {
 
     auto offset = cv::Point((int)curFrame.cols / 2, (int)curFrame.rows / 2) - result[0];
 
-    if (offset.x <= 30 && offset.y <= 30) {
+    if (std::abs(offset.x) <= 30 && std::abs(offset.y) <= 30) {
         ROS_INFO("Command: Move back by 20 cm");
 
         ros::Duration duration(1.);
@@ -160,7 +160,7 @@ void VisionBrain::collectDates() {
 void VisionBrain::waitForCollectingDate() {
     activateDateGrabber();
 
-    while (isDateGrabberActive) {
+    while (isDateGrabberActive) {break;
     }
 
     taskNumber++;
