@@ -3,7 +3,7 @@
 
 #include <image_transport/image_transport.h>
 #include <ros/ros.h>
-#include <std_msgs/Bool.h>
+#include <sensor_msgs/LaserScan.h>
 
 #include <opencv2/opencv.hpp>
 
@@ -16,6 +16,9 @@ class VisionBrain {
    private:
     image_transport::Subscriber imageSub;
     void imageRecievedCallback(const sensor_msgs::ImageConstPtr& msg);
+    
+    ros::Subscriber laserScanSub;
+    void scanRecievedCallback(const sensor_msgs::LaserScan::ConstPtr& scan);
 
     ros::Subscriber dateGrabberSub;
     void dateGrabberIsActiveCallback(const std_msgs::Bool::ConstPtr& pumpFinished);
@@ -25,6 +28,7 @@ class VisionBrain {
     void activateDateGrabber();
 
     cv::Mat curFrame;
+    sensor_msgs::LaserScan curScan;
 
     cv::String windowName;
 

@@ -31,6 +31,11 @@ void VisionBrain::imageRecievedCallback(const sensor_msgs::ImageConstPtr& msg) {
     }
 }
 
+void VisionBrain::scanRecievedCallback(const sensor_msgs::LaserScan::ConstPtr& scan) {
+    curScan = *scan;
+    ROS_INFO("RANGE: %f", scan.ranges[320]);
+}
+
 void VisionBrain::dateGrabberIsActiveCallback(const std_msgs::Bool::ConstPtr& pumpFinished) {
     isDateGrabberActive = pumpFinished->data;
 }
@@ -160,7 +165,8 @@ void VisionBrain::collectDates() {
 void VisionBrain::waitForCollectingDate() {
     activateDateGrabber();
 
-    while (isDateGrabberActive) {break;
+    while (isDateGrabberActive) {
+        break;
     }
 
     taskNumber++;
