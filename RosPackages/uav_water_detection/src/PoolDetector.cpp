@@ -114,6 +114,7 @@ Point PoolDetector::getPoolOffset(Mat im) {
     if (poolCenter != NULL_POINT) {
         circle(im, poolCenter, 5, Scalar(0, 255, 0), 2);
     }
+	rectangle(im, Point((int) im.cols/2 -100, (int) im.rows/2- 100), Point((int) im.cols/2 + 100, (int) im.rows/2 + 100), 3);
     
     return Point((int) im.cols/2, (int) im.rows/2) - poolCenter;
 }

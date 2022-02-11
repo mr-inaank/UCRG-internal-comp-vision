@@ -151,7 +151,7 @@ void VisionBrain::collectDates() {
 
     auto offset = cv::Point((int)curFrame.cols / 2, (int)curFrame.rows / 2) - result[0];
 
-    if (std::abs(offset.x) <= 30 && std::abs(offset.y) <= 30) {
+    if (std::abs(offset.x) <= 80 && std::abs(offset.y) <= 80) {
         ROS_INFO("Command: Move back by 20 cm");
 
         ros::Duration duration(1.);
