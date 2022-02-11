@@ -50,8 +50,9 @@ Point CheckerboardDetector::getCheckerboardLocation(Mat im) {
     findNonZero(result1, points);
 
     Rect rect = boundingRect(points);
+    rectangle(im, rect, Scalar(0, 0, 255), 1);
     if (rect.area() > 10000) {
-        rectangle(im, rect, Scalar(0, 0, 255), 2);
+        rectangle(im, rect, Scalar(0, 0, 255), 3);
 
         Point center = (rect.br() + rect.tl()) * 0.5;
         circle(im, center, 5, Scalar(0, 255, 0), 1);

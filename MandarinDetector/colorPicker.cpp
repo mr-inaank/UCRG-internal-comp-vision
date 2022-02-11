@@ -56,12 +56,12 @@ int main(int argc, char** argv) {
     namedWindow(winName, WINDOW_AUTOSIZE);
 
     HSVValues hsvValues{};
-    hsvValues.lowH = 95;
-    hsvValues.highH = 115;
-    hsvValues.lowS = 52;
-    hsvValues.highS = 255;
-    hsvValues.lowV = 0;
-    hsvValues.highV = 255;
+    hsvValues.lowH = 0;
+    hsvValues.highH = 255;
+    hsvValues.lowS = 0;
+    hsvValues.highS = 14;
+    hsvValues.lowV = 200;
+    hsvValues.highV = 215;
 
     createTrackbar("LowH", winName, &hsvValues.lowH, 255);
     createTrackbar("HighH", winName, &hsvValues.highH, 255);

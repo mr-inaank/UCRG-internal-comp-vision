@@ -131,14 +131,15 @@ void VisionBrain::printInstruction(cv::Point locationOffset) {
 
 void VisionBrain::findPool() {
 
-    auto result = PoolDetector::getPoolOffset(curFrame);
-    if (result == NULL_POINT) {
+    auto resultList = PoolDetector::getPoolOffset(curFrame);
+    if (resultList.size() == 0) {
         printf("\nCommand: LEFT");
         return;
     }
+    auto result = resultList[0];
 
     if (abs(result.x) <= 80 && abs(result.y) <= 80) {
-        printInstruction(cv::Point(0, 0));
+        printf("\nCommand: STOP");
         taskNumber++;
     } else {
         printInstruction(result);
@@ -168,17 +169,17 @@ void VisionBrain::waitForWaterCollection() {
 }
 
 void VisionBrain::findCheckerBoard() {
-    auto result = CheckerboardDetector::getCheckerboardLocation(curFrame);
-    if (result == NULL_POINT) {
+    auto resultList = CheckerboardDetector::getCheckerboardLocation(curFrame);
+    if (resultList.size() == 0) {
         printf("\nCommand: LEFT");
         return;
     }
-
-
+    auto result = result[0];
+    // Calculating offset vvvv
     result = cv::Point((int)curFrame.cols / 2, (int)curFrame.rows / 2) - result;
 
-    if (result.x <= 30 && result.y <= 30) {
-        printInstruction(cv::Point(0, 0));
+    if (abs(result.x) <= 30 && abs(result.y) <= 30) {
+        printf("\nCommand: STOP");
         taskNumber++;
     } else {
         printInstruction(result);

@@ -2,7 +2,7 @@
 #include <ros/ros.h>
 
 int main(int argc, char** argv) {
-    ros::init(argc, argv, "uav_water_collection");
+    ros::init(argc, argv, "uav_water_sim");
 
     VisionBrain brain;
     ROS_INFO("READY1231234");
