@@ -33,7 +33,7 @@ void VisionBrain::imageRecievedCallback(const sensor_msgs::ImageConstPtr& msg) {
 
 void VisionBrain::scanRecievedCallback(const sensor_msgs::LaserScan::ConstPtr& scan) {
     curScan = *scan;
-    ROS_INFO("RANGE: %f", scan.ranges[320]);
+    ROS_INFO("RANGE: %f", curScan.ranges[320]);
 }
 
 void VisionBrain::dateGrabberIsActiveCallback(const std_msgs::Bool::ConstPtr& pumpFinished) {
