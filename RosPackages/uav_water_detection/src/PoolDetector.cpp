@@ -6,7 +6,7 @@
 
 using namespace cv;
 
-const auto NULL_POINT = cv::Point(-1, -1);
+const auto NULL_POINT = cv::Point(-1500, -1500);
 #define MAX_HEIGHT 800
 
 Mat PoolDetector::getPoolMask(Mat im) {
@@ -114,6 +114,6 @@ Point PoolDetector::getPoolOffset(Mat im) {
     if (poolCenter != NULL_POINT) {
         circle(im, poolCenter, 5, Scalar(0, 255, 0), 2);
     }
-
+    
     return Point((int) im.cols/2, (int) im.rows/2) - poolCenter;
 }

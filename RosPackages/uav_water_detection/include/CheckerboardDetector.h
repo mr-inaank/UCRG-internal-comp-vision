@@ -7,7 +7,7 @@
 
 #include <opencv2/opencv.hpp>
 
-const auto NULL_POINT = cv::Point(-1, -1);
+const auto NULL_POINT = cv::Point(-1500, -1500);
 
 class CheckerboardDetector {
    public:

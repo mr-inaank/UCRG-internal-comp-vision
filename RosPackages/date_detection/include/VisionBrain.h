@@ -17,12 +17,12 @@ class VisionBrain {
     image_transport::Subscriber imageSub;
     void imageRecievedCallback(const sensor_msgs::ImageConstPtr& msg);
 
-    ros::Subscriber pumpSub;
-    void pumpIsActiveCallback(const std_msgs::Bool::ConstPtr& pumpFinished);
-    bool isPumpActive;
+    ros::Subscriber dateGrabberSub;
+    void dateGrabberIsActiveCallback(const std_msgs::Bool::ConstPtr& pumpFinished);
+    bool isDateGrabberActive = false;
 
-    ros::Publisher pumpPub;
-    void activatePump(bool activate);
+    ros::Publisher dateGrabberPub;
+    void activateDateGrabber();
 
     cv::Mat curFrame;
 
@@ -31,14 +31,14 @@ class VisionBrain {
     void printInstruction(cv::Point locationOffset);
 
     int taskNumber = 0;
-    int counter = 0;
+    int counter;
 
-    void takeoff();
-    void findPool();
-    void descendAboveZone();
-    void waitForWaterCollection();
-    void findCheckerBoard();
-    void returnToHome();
+    void moveToDateArea();
+    void collectDates();
+    void waitForCollectingDate();
+    void moveBackUp();
+    void moveToNextDateLine();
+    void moveToStart();
 };
 
 #endif
