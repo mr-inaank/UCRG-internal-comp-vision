@@ -107,7 +107,7 @@ int main(int argc, char** argv) {
         imshow(winName, result);
         imshow("winName", frame);
 
-        char c = static_cast<char>(waitKey(25));
+        char c = static_cast<char>(waitKey(1));
         if (c == 27) {
             break;
         } else if (c == 'a') std::cout << hsvValues << std::endl;

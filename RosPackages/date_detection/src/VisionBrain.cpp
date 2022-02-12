@@ -84,7 +84,7 @@ bool VisionBrain::executeTasks() {
     }
 
     cv::imshow(windowName, curFrame);
-    cv::waitKey(25);
+    cv::waitKey(1);
     return true;
 }
 
@@ -164,7 +164,7 @@ void VisionBrain::waitForCollectingDate() {
    //     break;
    // }
 
-    ros::Duration duration(70.);
+    ros::Duration duration(5.);
     duration.sleep();
 
 

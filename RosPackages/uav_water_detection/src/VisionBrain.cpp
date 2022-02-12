@@ -12,8 +12,8 @@ VisionBrain::VisionBrain() {
     image_transport::ImageTransport it{ nh };
     imageSub = it.subscribe("/usb_cam/image_raw", 1, &VisionBrain::imageRecievedCallback, this);
 
-    pumpPub = nh.advertise<std_msgs::Bool>("/uav/pump/activate", 1);
-    pumpSub = nh.subscribe("/uav/pump/isActive", 1, &VisionBrain::pumpIsActiveCallback, this);
+    pumpPub = nh.advertise<std_msgs::Bool>("/uav_arduino/in", 1);
+    pumpSub = nh.subscribe("/uav_arduino/out", 1, &VisionBrain::pumpIsActiveCallback, this);
 }
 
 VisionBrain::~VisionBrain() {
@@ -51,9 +51,12 @@ bool VisionBrain::executeTasks() {
         break;
     case 2:
         descendAboveZone();
+        activatePump(true);
+        isPumpActive = true;
         break;
     case 3:
         waitForWaterCollection();
+        printf("Collecting Water...");
         break;
     case 4:
         takeoff();
@@ -63,9 +66,12 @@ bool VisionBrain::executeTasks() {
         break;
     case 6:
         descendAboveZone();
+        activatePump(false);
+        isPumpActive = true;
         break;
     case 7:
         waitForWaterCollection();
+        printf("Discharging Water...");
         break;
     case 8:
         takeoff();
@@ -84,7 +90,7 @@ bool VisionBrain::executeTasks() {
 
 
     cv::imshow(windowName, curFrame);
-    cv::waitKey(25);
+    cv::waitKey(1);
     return true;
 }
 
@@ -153,13 +159,13 @@ void VisionBrain::descendAboveZone() {
     }
 
     printf("\nCommand: STOP");
-    activatePump(true);
-    isPumpActive = true;
+    // activatePump(true);
+    // isPumpActive = true;
     taskNumber++;
 }
 
 void VisionBrain::waitForWaterCollection() {
-    taskNumber++;
+    //taskNumber++;
     if (isPumpActive) {
         return;
     }
