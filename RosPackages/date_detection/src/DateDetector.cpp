@@ -64,7 +64,7 @@ std::vector<Point> DateDetector::findDates(Mat im) {
     Rect rect = boundingRect(contours[index]);
     rectangle(im, rect, Scalar(255, 0, 0), 2);
     Point center = (rect.br() + rect.tl()) * 0.5;
-    circle(im, poolCenter, 5, Scalar(0, 255, 0), 2);
+    circle(im, center, 5, Scalar(0, 255, 0), 2);
 
     rectangle(im, Point((int)im.cols / 2 - 100, (int)im.rows / 2 - 100), Point((int)im.cols / 2 + 100, (int)im.rows / 2 + 100), Scalar(255, 255, 0), 3);
     return std::vector<Point>{center};
