@@ -72,6 +72,7 @@ void VisionBrain::move(int forwardBackward, int leftRight, int upDown, int yawLe
         result += " ";
     }
 
+    ROS_INFO("%s", result.c_str());
     vec.push_back(forwardBackward);         // Forward (1)/Back (-1)
     vec.push_back(leftRight);               // Left (1)/Right (-1)
     vec.push_back(upDown);                  // Up (1)/ Down (-1)
