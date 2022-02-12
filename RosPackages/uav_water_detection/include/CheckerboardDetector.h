@@ -15,6 +15,7 @@ class CheckerboardDetector {
 
    private:
     static cv::Mat preprocessImage(cv::Mat im);
+    static cv::Mat getCornersImage(cv::Mat im);
 };
 
 #endif
