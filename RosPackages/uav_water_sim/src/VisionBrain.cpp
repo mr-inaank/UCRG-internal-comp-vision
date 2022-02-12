@@ -28,23 +28,23 @@ void VisionBrain::imageRecievedCallback(const sensor_msgs::ImageConstPtr& msg) {
 }
 
 void VisionBrain::move(int forwardBackward, int leftRight, int upDown, int yawLeftRight, int actuatorOpen) {
-    std_msgs::Float64MultiArray result;
+    std_msgs::Int32MultiArray message;
 
     auto h{ 1 }, w{ 5 };
 
-    result.layout.dim.push_back(std_msgs::MultiArrayDimension());
-    result.layout.dim[0].label = "height";
-    result.layout.dim[0].size = h;
-    result.layout.dim[0].stride = h * w;
+    message.layout.dim.push_back(std_msgs::MultiArrayDimension());
+    message.layout.dim[0].label = "height";
+    message.layout.dim[0].size = h;
+    message.layout.dim[0].stride = h * w;
 
-    result.layout.dim.push_back(std_msgs::MultiArrayDimension());
-    result.layout.dim[0].label = "width";
-    result.layout.dim[0].size = w;
-    result.layout.dim[0].stride = w;
+    message.layout.dim.push_back(std_msgs::MultiArrayDimension());
+    message.layout.dim[0].label = "width";
+    message.layout.dim[0].size = w;
+    message.layout.dim[0].stride = w;
 
-    result.layout.data_offset = 0;
+    message.layout.data_offset = 0;
 
-    std::vector<double> vec;
+    std::vector<int> vec;
 
     std::string result = "Command: ";
     if (forwardBackward != 0) {
@@ -78,8 +78,8 @@ void VisionBrain::move(int forwardBackward, int leftRight, int upDown, int yawLe
     vec.push_back(yawLeftRight);            // Yaw left (1)/ Yaw Right (-1)
     vec.push_back(actuatorOpen);            // Acuator Open (1)/Acuator Close (-1)
 
-    result.data = vec;
-    movePub.publish(result);
+    message.data = vec;
+    movePub.publish(message);
 }
 
 bool VisionBrain::executeTasks() {
@@ -168,7 +168,7 @@ void VisionBrain::printInstruction(cv::Point locationOffset) {
         vertical = -1;
     }
 
-    printf("\nCommand: %s %d, %s, %d", horizontal.c_str(), abs(locationOffset.x), vertical.c_str(), abs(locationOffset.y));
+    //printf("\nCommand: %s %d, %s, %d", horizontal.c_str(), abs(locationOffset.x), vertical.c_str(), abs(locationOffset.y));
     move(vertical, horizontal, 0, 0, 0);
 }
 
@@ -220,7 +220,7 @@ void VisionBrain::findCheckerBoard() {
         move(0, 1, 0, 0, 0);
         return;
     }
-    auto result = result[0];
+    auto result = resultList[0];
     // Calculating offset vvvv
     result = cv::Point((int)curFrame.cols / 2, (int)curFrame.rows / 2) - result;
 

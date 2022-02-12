@@ -14,11 +14,11 @@ public:
     bool executeTasks();
 
 private:
-    image_transport::Subscriber imageSub;
+    ros::Subscriber imageSub;
     void imageRecievedCallback(const sensor_msgs::ImageConstPtr& msg);
 
     ros::Publisher movePub;
-    void VisionBrain::move(int forwardBackward, int leftRight, int upDown, int yawLeftRight, int actuatorOpen);
+    void move(int forwardBackward, int leftRight, int upDown, int yawLeftRight, int actuatorOpen);
 
     cv::Mat curFrame;
 
