@@ -96,7 +96,7 @@ void VisionBrain::activatePump(bool activate) {
 }
 
 void VisionBrain::takeoff() {
-    if (counter < 20) {
+    if (counter < 25) {
         printf("\nCommand: UP");
         counter++;
         return;
@@ -137,7 +137,7 @@ void VisionBrain::findPool() {
         return;
     }
 
-    if (abs(result.x) <= 80 && abs(result.y) <= 80) {
+    if (abs(result.x) <= 100 && abs(result.y) <= 100) {
         printInstruction(cv::Point(0, 0));
         taskNumber++;
     } else {
@@ -177,7 +177,7 @@ void VisionBrain::findCheckerBoard() {
 
     result = cv::Point((int)curFrame.cols / 2, (int)curFrame.rows / 2) - result;
 
-    if (result.x <= 30 && result.y <= 30) {
+    if (abs(result.x) <= 100 && abs(result.y) <= 100) {
         printInstruction(cv::Point(0, 0));
         taskNumber++;
     } else {
@@ -188,13 +188,13 @@ void VisionBrain::findCheckerBoard() {
 }
 
 void VisionBrain::returnToHome() {
-    if (counter < 15) {
+    if (counter < 30) {
         printf("\nCommand: LEFT");
         counter++;
         return;
     }
 
-    if (counter < 30) {
+    if (counter < 50) {
         printf("\nCommand: DOWN");
         counter++;
         return;
