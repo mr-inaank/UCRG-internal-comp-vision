@@ -151,7 +151,7 @@ void VisionBrain::collectDates() {
 
         ros::Duration duration(5.);
         duration.sleep();
-
+	numDates++;
         waitForCollectingDate();
     } else {
         printInstruction(offset);
