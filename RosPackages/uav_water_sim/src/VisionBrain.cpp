@@ -11,7 +11,7 @@ VisionBrain::VisionBrain() {
 
     imageSub = nh.subscribe("iris/usb_cam/image_raw", 1, &VisionBrain::imageRecievedCallback, this);
 
-    movePub = nh.advertise<std_msgs::Bool>("/move", 1);
+    movePub = nh.advertise<std_msgs::Int32MultiArray>("/move", 1);
 }
 
 VisionBrain::~VisionBrain() {
@@ -197,14 +197,17 @@ void VisionBrain::descendAboveZone() {
     }
 
     move(0, 0, 0, 0, 0);
-    activatePump(true);
-    isPumpActive = true;
     taskNumber++;
 }
 
 void VisionBrain::waitForWaterCollection() {
-    taskNumber++;
-    if (isPumpActive) {
+    if (counter == 0) {
+        move(0, 0, 0, 0, 1);
+    }
+
+    if (counter < 20) {
+        ROS_INFO("PUMPING!!!!");
+        counter++;
         return;
     }
 

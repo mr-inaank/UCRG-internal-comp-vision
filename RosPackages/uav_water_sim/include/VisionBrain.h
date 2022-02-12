@@ -3,26 +3,22 @@
 
 #include <image_transport/image_transport.h>
 #include <ros/ros.h>
-#include <std_msgs/Bool.h>
+#include <std_msgs/Int32MultiArray.h>
 
 #include <opencv2/opencv.hpp>
 
 class VisionBrain {
-   public:
+public:
     VisionBrain();
     ~VisionBrain();
     bool executeTasks();
 
-   private:
+private:
     image_transport::Subscriber imageSub;
     void imageRecievedCallback(const sensor_msgs::ImageConstPtr& msg);
 
-    ros::Subscriber pumpSub;
-    void pumpIsActiveCallback(const std_msgs::Bool::ConstPtr& pumpFinished);
-    bool isPumpActive;
-
-    ros::Publisher pumpPub;
-    void activatePump(bool activate);
+    ros::Publisher movePub;
+    void VisionBrain::move(int forwardBackward, int leftRight, int upDown, int yawLeftRight, int actuatorOpen);
 
     cv::Mat curFrame;
 
