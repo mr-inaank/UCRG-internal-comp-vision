@@ -138,7 +138,7 @@ void VisionBrain::findPool() {
     }
 
     if (abs(result.x) <= 100 && abs(result.y) <= 100) {
-        printInstruction(cv::Point(0, 0));
+        printf("\nCommand: STOP");
         taskNumber++;
     } else {
         printInstruction(result);
@@ -178,7 +178,7 @@ void VisionBrain::findCheckerBoard() {
     result = cv::Point((int)curFrame.cols / 2, (int)curFrame.rows / 2) - result;
 
     if (abs(result.x) <= 100 && abs(result.y) <= 100) {
-        printInstruction(cv::Point(0, 0));
+        printf("\nCommand: STOP");
         taskNumber++;
     } else {
         printInstruction(result);
