@@ -5,6 +5,7 @@
 #include <ros/ros.h>
 #include <sensor_msgs/LaserScan.h>
 #include <std_msgs/Bool.h>
+#include <std_msgs/Float64MultiArray.h>
 
 #include <opencv2/opencv.hpp>
 
@@ -19,7 +20,7 @@ private:
     void imageRecievedCallback(const sensor_msgs::ImageConstPtr& msg);
 
     ros::Subscriber dateGrabberSub;
-    void dateGrabberIsActiveCallback(const std_msgs::Bool::ConstPtr& pumpFinished);
+    void dateGrabberIsActiveCallback(const std_msgs::Float64MultiArray::ConstPtr& pumpFinished);
     bool isDateGrabberActive = false;
 
     ros::Publisher dateGrabberPub;

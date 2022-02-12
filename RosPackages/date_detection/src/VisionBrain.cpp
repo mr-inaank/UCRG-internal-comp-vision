@@ -11,7 +11,7 @@ VisionBrain::VisionBrain() {
     image_transport::ImageTransport it{ nh };
     imageSub = it.subscribe("/usb_cam/image_raw", 1, &VisionBrain::imageRecievedCallback, this);
 
-    dateGrabberPub = nh.advertise<std_msgs::Bool>("/simon/dateCollector/activate", 1);
+    dateGrabberPub = nh.advertise<std_msgs::Float64MultiArray>("/simon/dateCollector/activate", 1);
     dateGrabberSub = nh.subscribe("/simon/dateCollector/isActive", 1, &VisionBrain::dateGrabberIsActiveCallback, this);
 }
 
@@ -31,8 +31,8 @@ void VisionBrain::imageRecievedCallback(const sensor_msgs::ImageConstPtr& msg) {
     }
 }
 
-void VisionBrain::dateGrabberIsActiveCallback(const std_msgs::Bool::ConstPtr& pumpFinished) {
-    isDateGrabberActive = pumpFinished->data;
+void VisionBrain::dateGrabberIsActiveCallback(const std_msgs::Float64MultiArray::ConstPtr& pumpFinished) {
+    isDateGrabberActive = 1;
 }
 
 bool VisionBrain::executeTasks() {
@@ -90,10 +90,10 @@ bool VisionBrain::executeTasks() {
 
 void VisionBrain::activateDateGrabber() {
     ROS_INFO("Activating Date Grabber");
-    isDateGrabberActive = true;
+    isDateGrabberActive = false;
 
-    std_msgs::Bool result;
-    result.data = true;
+    std_msgs::Float64MultiArray result;
+    result.data = {0,0,0,0,1,0,0};
 
     dateGrabberPub.publish(result);
 }
@@ -161,12 +161,14 @@ void VisionBrain::collectDates() {
 void VisionBrain::waitForCollectingDate() {
     activateDateGrabber();
 
-    //while (isDateGrabberActive) {
-   //     break;
-   // }
+    while (!isDateGrabberActive) {
+       printf("Grabbing Date");
+       ros::spinOnce();
+   }
 
-    ros::Duration duration(5.);
-    duration.sleep();
+    isDateGrabberActive = false;
+    //ros::Duration duration(5.);
+    //duration.sleep();
 
 
     taskNumber++;
