@@ -16,17 +16,13 @@ Mat CheckerboardDetector::preprocessImage(Mat im) {
 
     // add a colour masks to only include certain hue range
     Scalar lower_mask, upper_mask;
-    Scalar lower_mask2, upper_mask2;
-    lower_mask = Scalar(0, 0, 0);
-    upper_mask = Scalar(255, 11, 255);
-    lower_mask2 = Scalar(0, 4, 144);
-    upper_mask2 = Scalar(255, 45, 255);
+    lower_mask = Scalar(0, 0, 144);
+    upper_mask = Scalar(255, 255, 255);
+    // lower_mask = Scalar(0, 0, 0);
+    // upper_mask = Scalar(255, 11, 255);
 
-    Mat mask1, mask2;
-    inRange(im_HSV, lower_mask, upper_mask, mask1); // using hsv ranges
-    inRange(im_HSV, lower_mask2, upper_mask2, mask2); // using hsv ranges
-
-    Mat mask = mask1.clone();
+    Mat mask;
+    inRange(im_HSV, lower_mask, upper_mask, mask); // using hsv ranges
 
     Mat kernel = getStructuringElement(MORPH_RECT, Size(11, 11));
     morphologyEx(mask, mask, MORPH_OPEN, kernel);
@@ -44,7 +40,10 @@ Point CheckerboardDetector::getCheckerboardLocation(Mat im) {
     Mat kernel = getStructuringElement(MORPH_RECT, Size(5, 5));
     morphologyEx(result1, result1, MORPH_CLOSE, kernel);
     kernel = getStructuringElement(MORPH_RECT, Size(3, 3));
-    morphologyEx(result1, result1, MORPH_ERODE, kernel);
+    // morphologyEx(result1, result1, MORPH_ERODE, kernel);
+
+    imshow("'mask'", mask);
+    imshow("'resu'", result1);
 
     std::vector<Point> points;
     findNonZero(result1, points);
@@ -68,5 +67,4 @@ Point CheckerboardDetector::getCheckerboardLocation(Mat im) {
         prevCenter = NULL_POINT;
         return NULL_POINT;
     }
-
 }
