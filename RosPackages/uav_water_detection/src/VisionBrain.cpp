@@ -10,10 +10,10 @@ VisionBrain::VisionBrain() {
     cv::namedWindow(windowName);
 
     image_transport::ImageTransport it{nh};
-    imageSub = it.subscribe("/simon/camera_base_mount/simon/image_raw", 1, &VisionBrain::imageRecievedCallback, this);
+    imageSub = it.subscribe("/usb_cam/image_raw", 1, &VisionBrain::imageRecievedCallback, this);
 
-    pumpPub = nh.advertise<std_msgs::Bool>("/uav/pump/activate", 1);
-    pumpSub = nh.subscribe("/uav/pump/isActive", 1, &VisionBrain::pumpIsActiveCallback, this);
+    pumpPub = nh.advertise<std_msgs::Bool>("/uav_arduino/in", 1);
+    pumpSub = nh.subscribe("/uav_arduino/out", 1, &VisionBrain::pumpIsActiveCallback, this);
 }
 
 VisionBrain::~VisionBrain() { cv::destroyWindow(windowName); }
