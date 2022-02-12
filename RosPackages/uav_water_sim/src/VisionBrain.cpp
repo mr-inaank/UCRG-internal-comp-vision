@@ -174,11 +174,9 @@ void VisionBrain::findCheckerBoard() {
         printf("\nCommand: LEFT");
         return;
     }
-    auto result = result[0];
-    // Calculating offset vvvv
-    result = cv::Point((int)curFrame.cols / 2, (int)curFrame.rows / 2) - result;
+    auto result = resultList[0];
 
-    if (abs(result.x) <= 30 && abs(result.y) <= 30) {
+    if (abs(result.x) <= 80 && abs(result.y) <= 80) {
         printf("\nCommand: STOP");
         taskNumber++;
     } else {
