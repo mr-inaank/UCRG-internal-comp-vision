@@ -13,7 +13,6 @@ VisionBrain::VisionBrain() {
 
     dateGrabberPub = nh.advertise<std_msgs::Bool>("/simon/dateCollector/activate", 1);
     dateGrabberSub = nh.subscribe("/simon/dateCollector/isActive", 1, &VisionBrain::dateGrabberIsActiveCallback, this);
-laserScanSub = nh.subscribe("/scan", 1, &VisionBrain::scanRecievedCallback, this);
 }
 
 VisionBrain::~VisionBrain() {
@@ -30,11 +29,6 @@ void VisionBrain::imageRecievedCallback(const sensor_msgs::ImageConstPtr& msg) {
     catch (cv_bridge::Exception& e) {
         ROS_ERROR("Could not convert from '%s' to 'bgr8'.", msg->encoding.c_str());
     }
-}
-
-void VisionBrain::scanRecievedCallback(const sensor_msgs::LaserScan::ConstPtr& scan) {
-    curScan = *scan;
-    ROS_INFO("RANGE: %f", curScan.ranges[320]);
 }
 
 void VisionBrain::dateGrabberIsActiveCallback(const std_msgs::Bool::ConstPtr& pumpFinished) {
@@ -105,7 +99,7 @@ void VisionBrain::activateDateGrabber() {
 void VisionBrain::moveToDateArea() {
     ROS_INFO("Command: Move right by 1 metre");
 
-    ros::Duration duration(1.);
+    ros::Duration duration(5.);
     duration.sleep();
 
     taskNumber++;
@@ -151,10 +145,10 @@ void VisionBrain::collectDates() {
 
     auto offset = cv::Point((int)curFrame.cols / 2, (int)curFrame.rows / 2) - result[0];
 
-    if (std::abs(offset.x) <= 30 && std::abs(offset.y) <= 30) {
+    if (std::abs(offset.x) <= 80 && std::abs(offset.y) <= 80) {
         ROS_INFO("Command: Move back by 20 cm");
 
-        ros::Duration duration(1.);
+        ros::Duration duration(5.);
         duration.sleep();
 
         waitForCollectingDate();
@@ -170,19 +164,18 @@ void VisionBrain::waitForCollectingDate() {
    //     break;
    // }
 
- 	ros::Duration duration(70.);
-        duration.sleep();
+    ros::Duration duration(70.);
+    duration.sleep();
 
 
     taskNumber++;
 }
 
 void VisionBrain::moveBackUp() {
-    if (counter < 7) {
-        ROS_INFO("Command: FORWARD");
-        counter++;
-        return;
-    }
+    ROS_INFO("Command: FORWARD");
+
+    ros::Duration duration(10.);
+    duration.sleep();
 
     ROS_INFO("Command: STOP");
     taskNumber++;
@@ -191,7 +184,7 @@ void VisionBrain::moveBackUp() {
 void VisionBrain::moveToNextDateLine() {
     ROS_INFO("Command: Move right by 50 cm");
 
-    ros::Duration duration(1.);
+    ros::Duration duration(5.);
     duration.sleep();
 
     taskNumber++;

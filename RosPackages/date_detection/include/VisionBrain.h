@@ -17,9 +17,6 @@ class VisionBrain {
    private:
     image_transport::Subscriber imageSub;
     void imageRecievedCallback(const sensor_msgs::ImageConstPtr& msg);
-    
-    ros::Subscriber laserScanSub;
-    void scanRecievedCallback(const sensor_msgs::LaserScan::ConstPtr& scan);
 
     ros::Subscriber dateGrabberSub;
     void dateGrabberIsActiveCallback(const std_msgs::Bool::ConstPtr& pumpFinished);
