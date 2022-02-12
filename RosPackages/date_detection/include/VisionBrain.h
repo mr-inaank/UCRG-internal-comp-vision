@@ -34,6 +34,7 @@ private:
 
     int taskNumber = 0;
     int counter;
+    int numDates = 0;
 
     void moveToDateArea();
     void collectDates();
