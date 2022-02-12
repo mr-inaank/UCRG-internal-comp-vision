@@ -132,7 +132,8 @@ void VisionBrain::printInstruction(cv::Point locationOffset) {
 
 void VisionBrain::collectDates() {
 
-    if (counter >= 200) {
+    if (counter >= 200 || numDates == 2) {
+	numDates = 0;
         taskNumber++;
     }
     counter++;
@@ -150,7 +151,7 @@ void VisionBrain::collectDates() {
 
         ros::Duration duration(5.);
         duration.sleep();
-
+	numDates++;
         waitForCollectingDate();
     } else {
         printInstruction(offset);
