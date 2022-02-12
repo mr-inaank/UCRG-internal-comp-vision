@@ -9,12 +9,12 @@
 #include <opencv2/opencv.hpp>
 
 class VisionBrain {
-   public:
+public:
     VisionBrain();
     ~VisionBrain();
     bool executeTasks();
 
-   private:
+private:
     image_transport::Subscriber imageSub;
     void imageRecievedCallback(const sensor_msgs::ImageConstPtr& msg);
 

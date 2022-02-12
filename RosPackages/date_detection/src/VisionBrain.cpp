@@ -83,6 +83,8 @@ bool VisionBrain::executeTasks() {
         counter = 0;
     }
 
+    cv::imshow(windowName, curFrame);
+    cv::waitKey(25);
     return true;
 }
 
@@ -126,8 +128,6 @@ void VisionBrain::printInstruction(cv::Point locationOffset) {
     }
 
     ROS_INFO("Command: %s %d, %s, %d", horizontal.c_str(), abs(locationOffset.x), vertical.c_str(), abs(locationOffset.y));
-    cv::imshow(windowName, curFrame);
-    cv::waitKey(25);
 }
 
 void VisionBrain::collectDates() {
@@ -145,7 +145,7 @@ void VisionBrain::collectDates() {
 
     auto offset = cv::Point((int)curFrame.cols / 2, (int)curFrame.rows / 2) - result[0];
 
-    if (std::abs(offset.x) <= 80 && std::abs(offset.y) <= 80) {
+    if (std::abs(offset.x) <= 100 && std::abs(offset.y) <= 100) {
         ROS_INFO("Command: Move back by 20 cm");
 
         ros::Duration duration(5.);

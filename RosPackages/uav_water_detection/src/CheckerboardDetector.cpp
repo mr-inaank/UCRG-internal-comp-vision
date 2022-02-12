@@ -62,8 +62,7 @@ Point CheckerboardDetector::getCheckerboardLocation(Mat im) {
         }
         circle(im, center, 7, Scalar(0, 255, 0), 3);
         prevCenter = center;
-	rectangle(im, Point((int) im.cols/2 -100, (int) im.rows/2- 100), Point((int) im.cols/2 + 100, (int) im.rows/2 + 100), 3);
-
+        rectangle(im, Point((int)im.cols / 2 - 100, (int)im.rows / 2 - 100), Point((int)im.cols / 2 + 100, (int)im.rows / 2 + 100), Scalar(255, 255, 0), 3);
         return center;
     } else {
         prevCenter = NULL_POINT;

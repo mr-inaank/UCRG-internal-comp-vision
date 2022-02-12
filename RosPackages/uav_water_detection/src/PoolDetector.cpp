@@ -63,7 +63,7 @@ Point PoolDetector::getPoolCenter(std::vector<Point> pool) {
     auto cX = (int)(M.m10 / M.m00);
     auto cY = (int)(M.m01 / M.m00);
 
-    Point result{cX, cY};
+    Point result{ cX, cY };
     // ROS_INFO("Pool Center: (%d, %d)", cX, cY);
     return result;
 }
@@ -88,7 +88,7 @@ void printInstruction(Mat im, Point poolCenter) {
     }
 
     std::cout << "Command: " << horizontal << abs(im.cols / 2 + xOffset - poolCenter.x) << ", " << vertical
-              << abs(im.rows / 2 + yOffset - poolCenter.y) << std::endl;
+        << abs(im.rows / 2 + yOffset - poolCenter.y) << std::endl;
 }
 
 Point PoolDetector::getPoolOffset(Mat im) {
@@ -114,7 +114,7 @@ Point PoolDetector::getPoolOffset(Mat im) {
     if (poolCenter != NULL_POINT) {
         circle(im, poolCenter, 5, Scalar(0, 255, 0), 2);
     }
-	rectangle(im, Point((int) im.cols/2 -100, (int) im.rows/2- 100), Point((int) im.cols/2 + 100, (int) im.rows/2 + 100), 3);
-    
-    return Point((int) im.cols/2, (int) im.rows/2) - poolCenter;
+    rectangle(im, Point((int)im.cols / 2 - 100, (int)im.rows / 2 - 100), Point((int)im.cols / 2 + 100, (int)im.rows / 2 + 100), Scalar(255, 255, 0), 3);
+
+    return Point((int)im.cols / 2, (int)im.rows / 2) - poolCenter;
 }
